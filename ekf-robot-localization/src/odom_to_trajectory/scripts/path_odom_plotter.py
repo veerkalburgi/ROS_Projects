@@ -4,7 +4,7 @@ import rospy
 from tf.transformations import quaternion_from_euler
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry, Path
-from geometry_msgs import PoseWithCovarianceStamped, PoseStamped
+from geometry_msgs.msg import PoseWithCovarianceStamped, PoseStamped
 from sensor_msgs.msg import Joy
 
 import sys
@@ -29,7 +29,7 @@ def callback(data):
 	pose.pose.orientation.x = float(data.pose.pose.orientation.x)
 	pose.pose.orientation.y = float(data.pose.pose.orientation.y)
 	pose.pose.orientation.z = float(data.pose.pose.orientation.z)
-	poes.pose.orientation.w = float(data.pose.pose.orientation.w)
+	pose.pose.orientation.w = float(data.pose.pose.orientation.w)
 
 
 	#To avoid repeating the values, it is found that the recived values are differents
@@ -39,14 +39,14 @@ def callback(data):
 		path.header.frame_id = "odom"
 		path.header.stamp= rospy.Time.now()
 		pose.header.stamp= path.header.stamp
-		path.poses.append= (pose)
+		path.poses.append(pose)
 
 		#Published the msg
 
 	cont = cont+1
 	rospy.loginfo("Value Counted: %i" % cont)
 	if cont> max_append:
-		path.pose.pop(0)
+		path.poses.pop(0)
 	pub.publish(path)
 
 	#Save the last position
@@ -91,7 +91,7 @@ try:
 	while not rospy.is_shutdown():
 		rate.sleep()
 
-	except rospy.ROSInterruptException:
-		pass
+except rospy.ROSInterruptException:
+	pass
 
 
